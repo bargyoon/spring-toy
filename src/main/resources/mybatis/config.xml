@@ -13,4 +13,5 @@
 	<mappers>
 		<mapper resource="mybatis/mapper/mybatisMapper.xml" />
 	</mappers>
+	
 </configuration>

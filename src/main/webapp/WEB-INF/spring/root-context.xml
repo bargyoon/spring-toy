@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
@@ -22,5 +24,36 @@
 	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
    		<constructor-arg index="0" ref="sqlSessionFactory" />
  	</bean>
+ 	
+ 	<!-- 메일 발송 : JavaMailSenderImpl -->
+ 	<bean class="org.springframework.mail.javamail.JavaMailSenderImpl" id="javaMailSenderImpl">
+ 		<property name="username" value="bargyoon@gmail.com"/>
+ 		<property name="password" value="147856aa"/>
+ 		<property name="host" value="smtp.gmail.com"/>
+ 		<property name="port" value="587"/>
+ 		<property name="javaMailProperties" >
+ 			<props>
+ 				<prop key="mail.smtp.starttls.enable">true</prop>
+ 				<prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
+ 				<prop key="mail.smtp.auth">true</prop>
+ 				<prop key="mail.debug">true</prop>
+ 			</props>
+ 		</property>
+ 	</bean>
+ 	
+ 	<bean class="org.springframework.http.client.SimpleClientHttpRequestFactory" id="simpleClientHttpRequestFactory">
+ 		<property name="connectTimeout" value="5000"/>
+ 		<property name="readTimeout" value="5000"/>
+ 	</bean>
+ 	
+ 	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+ 		<constructor-arg name="requestFactory" ref="simpleClientHttpRequestFactory"/>
+ 	</bean>
+ 	
+ 	<!-- 비밀번호 암호화 : DelegatingPasswordEncoder, PasswordEncoderFactories -->
+ 	<bean id="passwordEncoder" class="org.springframework.security.crypto.factory.PasswordEncoderFactories" factory-method="createDelegatingPasswordEncoder"></bean>
+ 	
+ 	
+ 	<mybatis-spring:scan base-package="com.kh.spring" annotation="org.apache.ibatis.annotations.Mapper"/>
 	
 </beans>

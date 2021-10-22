@@ -2,14 +2,18 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="com.kh.spring.mybatis.mybatisMapper">
-  	<select id="selectPasswordByUserId" resultType="java.lang.String">
-  		select password from member where user_id = #{userId}
-  	</select>
+  <mapper namespace="com.kh.spring.mybatis.MybatisRepository">
+  
+  <!-- 
+  	#{} vs ${}
+  	#{} : preparedStatement에서 쿼리 템플릿을 완성 시킨 뒤에 파라미터 값을 전달 받아 쿼리를 완성
+  		  문자열 이스케이프처리가 자동으로 된다. SQL Injection 공격에 안전하다.
   	
-  	<select id="selectMemberById" resultType="Member">
-  		select * from member where user_id = #{userId}
-  	</select>
+  	${} : 쿼리 템플릿이 생성되는 시점에 파라미터로 전달된 값을 사용해 쿼리 템플릿을 완성
+  	
+   -->
+  
+  	
   	
   	<select id="selectRentAndMemberById" resultType="map">
   		select * 
@@ -43,33 +47,17 @@
   		where user_id = #{userId}
   	</select>
   	
-  	<insert id="insertWithDTO">
-  		insert into member(user_id,password,tell,email)
-  		values(#{userId},#{password},#{tell},#{email})
+  	
+  	<insert id="procedure">
+  		{call sp_rent_extend(#{rbIdx,mode=IN})
   	</insert>
   	
-  	<insert id="insertWithMap">
-  		insert into rent_master(rm_idx,user_id,title,rent_book_cnt)
-  		values(sc_rm_idx.nextval,#{member.userId},#{title},#{rentBookCnt})
-  	</insert>
-  	
-  	<delete id="delete">
-  		delete from rent_master where user_id = #{userId}
-  	</delete>
-  	
-  	<update id="update">
-  		update member 
-  		set password = #{password}
-  		where user_id = #{userId}
-  	</update>
   	<!-- 
   		마이바티스의 기본 statement객체는 PreparedStatement를 사용한다.
   		다른 statement를 사용해야 할 경우 statementType 속성을 사용해 변경이 가능하다.
   		STATEMENT, PREPARED, CALLABLE
   	 -->
-  	<insert id="procedure" statementType="CALLABLE">
-  		{call sp_rent_extend(#{rbIdx,mode=IN})
-  	</insert>
+  	
   	
   	<insert id="test01">
   		insert into book(title,author,bk_idx) 
@@ -89,9 +77,103 @@
   	
   	<select id="test04" resultType="map">
   		select * from 
-  		(select rownum rnum, b.* 
+  		(select , b.* 
   		from book b order by RENT_CNT desc)
-  		where rnum <![CDATA[<]]> #{rentCnt}
+  		where rownum <![CDATA[<]]> #{rentCnt}
   	</select>
+  	
+  	
+  	<select id="dynamicQueryIf" resultType="map">
+  		select * from book where 
+  		<if test="searchType == 'info'">
+  			info like '%'||#{keyword}||'%'
+  		</if>
+  		<if test="searchType =='author'">
+  			author like '%'||#{keyword}||'%'
+  		</if>
+  	</select>
+  	
+  	<select id="dynamicQueryChoose" resultType="map">
+  		select * from book where
+  		<choose>
+  			<when test="searchType == 'info'">
+  				info like '%'||#{keyword}||'%'
+  			</when>
+  			<when test="searchType == 'author'">
+  				author like '%'||#{keyword}||'%'
+  			</when>
+  			<otherwise>
+  				title like '%'||#{keyword}||'%'
+  			</otherwise>
+  		</choose>
+  	
+  	</select>
+  	
+  	<select id="dynamicQueryWhereAndForeachTag" resultType="map">
+  		select * from book
+  		<where>
+  			<foreach collection="searchTypes" item="type">
+  				<if test="type == 'rentable'">
+  					or book_amt > 0
+  				</if>
+  				<if test="type== 'title'">
+  					or title like '%'||#{keyword}||'%'
+  				</if>
+  				<if test="type== 'author'">
+  					or author like '%'||#{keyword}||'%'
+  				</if>
+  			
+  			</foreach>
+  		</where>
+  	
+  	</select>
+  	<select id="dynamicQueryForeachTagWithList" resultType="map">
+  		select * from member 
+  		where user_id in 
+  		<foreach collection="list" open="(" close=")" separator="," item="userId">
+  			#{userId}
+  		</foreach>
+  	</select>
+  	
+  	<insert id="insertTemplate">
+  		insert into ${tableName}
+  		<!-- foreach의 collection에 map을 넘길 경우, index 속성으로 key값을 저장 -->
+  		<if test="primaryKey != null">
+	  		(${primaryKey.col}
+	  		<foreach collection="data" index="key" item="val" open="," close=")" separator=",">
+	  			${key}
+	  		</foreach>
+	  		values(${primaryKey.data}
+	  		<foreach collection="data" index="key" item="val" open="," close=")" separator=",">
+	  			#{val}
+	  		</foreach>
+  		</if>
+  		<if test="primaryKey == null">
+	  		<foreach collection="data" index="key" item="val" open="(" close=")" separator=",">
+	  			${key}
+	  		</foreach>
+	  		values
+	  		<foreach collection="data" index="key" item="val" open="(" close=")" separator=",">
+	  			#{val}
+	  		</foreach>
+  		</if>
+  	</insert>
+  	
+  	<update id="dynamicQuerySetTag">
+  		update member
+  		<set>
+  			<if test="password != null">
+  				password = #{password}
+  			</if>
+  			<if test="tell != null">
+  				,tell = #{tell}
+  			</if>
+  			<if test="email != null">
+  				,email = #{email}
+  			</if>
+  		</set>
+  		where user_id = #{userId}
+  	</update>
+  	
   	
   </mapper>
