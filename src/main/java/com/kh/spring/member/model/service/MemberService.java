@@ -14,6 +14,7 @@ import com.kh.spring.member.model.dto.Member;
 import com.kh.spring.member.model.repository.MemberRepository;
 import com.kh.spring.member.validator.JoinForm;
 
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Service
