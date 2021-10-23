@@ -92,7 +92,8 @@ public class MemberController {
 	public String join(@Validated JoinForm form
 			,Errors errors //Error객체는 반드시 검증할 객체의 바로 뒤에 작성
 			,Model model
-			,HttpSession session) {
+			,HttpSession session
+			,RedirectAttributes redirectAttr) {
 		ValidatorResult vr = new ValidatorResult();
 		model.addAttribute("error", vr.getError());
 		
@@ -104,6 +105,8 @@ public class MemberController {
 		session.setAttribute("persistToken", token);
 		session.setAttribute("persistUser", form);
 		
+		redirectAttr.addFlashAttribute("message","회원가입완료를 위한 이메일이 발송되었습니다.");
+		
 		memberService.authenticateByEmail(form,token);
 		
 		return "redirect:/";
@@ -113,7 +116,8 @@ public class MemberController {
 	public String joinImpl(@PathVariable String token
 			,@SessionAttribute(value = "persistToken", required=false) String persistToken
 			,@SessionAttribute(value = "persistUser", required=false) JoinForm persistUser
-			,HttpSession session) {
+			,HttpSession session
+			,RedirectAttributes redirectAttr) {
 	
 		if(!token.equals(persistToken)) {
 			throw new HandlableException(ErrorCode.AUTHENTICATION_FAILED_ERROR);
@@ -122,6 +126,8 @@ public class MemberController {
 		memberService.insertMember(persistUser);
 		session.removeAttribute("persistToken");
 		session.removeAttribute("persistUser");
+		redirectAttr.addFlashAttribute("message","환영합니다. 고객님");
+
 		return "redirect:/member/login";
 	}
 	

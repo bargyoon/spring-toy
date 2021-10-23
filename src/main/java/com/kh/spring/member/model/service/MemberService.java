@@ -24,7 +24,7 @@ public class MemberService {
 	private final RestTemplate template;
 	private final MailSender mailSender;
 	private final MemberRepository memberRepository;
-	private final PasswordEncoder password;
+	private final PasswordEncoder passwordEncoder;
 	
 
 	public String selectPasswordById() {
@@ -32,14 +32,22 @@ public class MemberService {
 	}
 
 	public void insertMember(JoinForm form) {
-		
+		form.setPassword(passwordEncoder.encode(form.getPassword()));
 		
 		memberRepository.insertMember(form);
 		
 	}
 
 	public Member authenticateMember(Member member) {
-		return memberRepository.authenticateMember(member);
+		Member storedMember = memberRepository.selectMemberByUserId(member.getUserId());
+		
+		
+		
+		if(storedMember != null && passwordEncoder.matches(member.getPassword(),storedMember.getPassword())) {
+			return storedMember;
+		}
+		
+		return null;
 		
 	}
 

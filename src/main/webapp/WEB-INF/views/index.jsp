@@ -8,10 +8,17 @@
 	h1{
 		text-align: center;
 	}
+	.valid-msg{color:red;	font-size:0.5vw;}
 </style>
 </head>
 <body>
+
 <h1>PCLASS TOY PROJECT</h1>
+
+<c:if test="${not empty message}">
+		<span class='valid-msg'>${message }</span>
+	</c:if>
+
 
 <c:if test="${empty authentication}">
 	<h2><a href='/member/login'>login</a></h2>

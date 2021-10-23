@@ -54,10 +54,10 @@ public class MemberControllerTest {
 	@Test
 	public void join() throws Exception {
 		mockMvc.perform(post("/member/join")
-				.param("userId","testUser")
-				.param("password", "1234")
-				.param("tell", "010-1111-1111")
-				.param("email", "asa@naver.com"))
+				.param("userId","testJoin")
+				.param("password", "123456aa@")
+				.param("tell", "01011111111")
+				.param("email", "bargyoon@gmail.com"))
 		.andExpect(status().isOk())
 		.andDo(print());
 		
@@ -66,10 +66,10 @@ public class MemberControllerTest {
 	@Test
 	public void jacksonTest() throws JsonProcessingException {
 		Member member = new Member();
-		member.setUserId("testJson");
-		member.setPassword("1234");
+		member.setUserId("testJoin");
+		member.setPassword("123456aa@");
 		member.setEmail("aaa@nbbb.com");
-		member.setTell("010-1234-1234");
+		member.setTell("01012341234");
 		
 		ObjectMapper mapper = new ObjectMapper();
 		//자바객체 -> json 문자열
