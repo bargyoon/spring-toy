@@ -126,6 +126,7 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
+		
 		<!-- Ojdbc6 -->
 		<dependency>
 			<groupId>oracle</groupId>
@@ -137,6 +138,7 @@
 			<artifactId>spring-orm</artifactId>
 			<version>5.3.10</version>
 		</dependency>
+		
 		<!-- Mybatis -->
 		<dependency>
 			<groupId>org.mybatis</groupId>
