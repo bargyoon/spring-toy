@@ -1,14 +1,12 @@
 package com.kh.spring.board.model.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 
-import com.kh.spring.board.model.repository.BoardRepository;
+import org.springframework.web.multipart.MultipartFile;
 
-import lombok.RequiredArgsConstructor;
+import com.kh.spring.board.model.dto.Board;
 
-@Service
-@RequiredArgsConstructor
-public class BoardService {
+public interface BoardService {
 
-	private BoardRepository boardRepository;
+	void insertBoard(List<MultipartFile> mfs, Board board);
 }

@@ -30,7 +30,7 @@ import com.kh.spring.common.code.ErrorCode;
 import com.kh.spring.common.exception.HandlableException;
 import com.kh.spring.common.validator.ValidatorResult;
 import com.kh.spring.member.model.dto.Member;
-import com.kh.spring.member.model.service.MemberService;
+import com.kh.spring.member.model.service.MemberServiceImpl;
 import com.kh.spring.member.validator.JoinForm;
 import com.kh.spring.member.validator.JoinFormValidator;
 
@@ -63,12 +63,12 @@ public class MemberController {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	
-	private MemberService memberService;
+	private MemberServiceImpl memberService;
 	private JoinFormValidator joinFormValidator;
 	
 	
 	
-	public MemberController(MemberService memberService, JoinFormValidator joinFormValidator) {
+	public MemberController(MemberServiceImpl memberService, JoinFormValidator joinFormValidator) {
 		super();
 		this.memberService = memberService;
 		this.joinFormValidator = joinFormValidator;
