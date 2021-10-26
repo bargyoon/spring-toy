@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServiceImpl {
+public class MemberServiceImpl implements MemberService{
 	
 	private final RestTemplate template;
 	private final MailSender mailSender;

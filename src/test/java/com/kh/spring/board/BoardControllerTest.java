@@ -1,6 +1,8 @@
 package com.kh.spring.board;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -18,6 +20,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.kh.spring.board.model.dto.Board;
 import com.kh.spring.member.model.dto.Member;
 
 @WebAppConfiguration
@@ -52,6 +55,18 @@ public class BoardControllerTest {
 				.param("content", "본문")
 				.sessionAttr("authentication",member))
 		.andExpect(status().is3xxRedirection())
+		.andDo(print());
+	}
+	
+	@Test
+	public void boardDetail() throws Exception{
+		Member member = new Member();
+		member.setUserId("testJoin");
+		
+		mockMvc.perform(get("/board/board-detail")
+				.param("bdIdx","100021")
+				.sessionAttr("authentication", member))
+		.andExpect(status().isOk())
 		.andDo(print());
 	}
 }

@@ -33,7 +33,7 @@ public class FileUtil {
 		int year = today.get(Calendar.YEAR);
 		int month = today.get(Calendar.MONTH) + 1;
 		int date = today.get(Calendar.DATE);
-		return year + "\\" + month + "\\" + date + "\\";
+		return year + "/" + month + "/" + date + "/";
 	}
 	
 	private String getSavePath() {

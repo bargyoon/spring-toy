@@ -16,6 +16,6 @@ public class FileDTO {
 	private int isDel;
 	
 	public String getDownloadURL() {
-		return "/file/" + savePath + renameFileName + "?originName=" + originFileName;
+		return "/file/" + savePath + renameFileName;
 	}
 }

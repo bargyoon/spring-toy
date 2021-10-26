@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -25,16 +24,19 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.CookieGenerator;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.spring.common.code.ErrorCode;
 import com.kh.spring.common.exception.HandlableException;
 import com.kh.spring.common.validator.ValidatorResult;
 import com.kh.spring.member.model.dto.Member;
+import com.kh.spring.member.model.service.MemberService;
 import com.kh.spring.member.model.service.MemberServiceImpl;
 import com.kh.spring.member.validator.JoinForm;
 import com.kh.spring.member.validator.JoinFormValidator;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("member")
 public class MemberController {
 		//1. @Controller : 해당 클래스를 applicationContext에 bean으로 등록
@@ -63,16 +65,11 @@ public class MemberController {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	
-	private MemberServiceImpl memberService;
-	private JoinFormValidator joinFormValidator;
+	private final MemberService memberService;
+	private final JoinFormValidator joinFormValidator;
 	
 	
 	
-	public MemberController(MemberServiceImpl memberService, JoinFormValidator joinFormValidator) {
-		super();
-		this.memberService = memberService;
-		this.joinFormValidator = joinFormValidator;
-	}
 
 	//model의 속성 중 속성명이 joinForm인 속성이 있는 경우에
 	//WebDataBinder의 속성을 초기화

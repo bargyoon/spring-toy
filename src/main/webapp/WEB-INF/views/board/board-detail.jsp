@@ -41,19 +41,28 @@
 	<div class="info file_info">
 		<ol>
 		<c:forEach items="${datas.files}" var="file">
-			<li><a href="${file.downloadURL}">${file.originFileName} </a></li>
+			<li><a onclick="downloadFile('${file.originFileName}','${file.renameFileName}','${file.savePath}')">${file.originFileName} </a></li>
 		</c:forEach>
 		</ol>
 	</div>
 	<div class="article_content">
-		<pre>
-			<c:out value="${datas.board.content}"></c:out>
-		</pre>
+		<pre><c:out value="${datas.board.content}"></c:out></pre>
 	</div>
 	
 	
 </div>
-
+<script type="text/javascript">
+	let downloadFile = (ofn,rfn,path) =>{
+		let paramObj = {
+				originFileName : ofn,
+				renameFileName : rfn,
+				savePath : path		
+		}
+		
+		location.href = '/download?'+urlEncoder(paramObj);
+	
+	}
+</script>
 
 </body>
 </html>

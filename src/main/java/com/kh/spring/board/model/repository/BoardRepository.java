@@ -1,7 +1,11 @@
 package com.kh.spring.board.model.repository;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.spring.board.model.dto.Board;
 import com.kh.spring.common.util.FileDTO;
@@ -16,6 +20,12 @@ public interface BoardRepository {
 	@Insert("insert into file_info(fl_idx, type_idx, origin_file_name, rename_file_name, save_path) "
 			+ " values(sc_file_idx.nextval, sc_board_idx.currval, #{originFileName}, #{renameFileName}, #{savePath})")
 	void insertFileInfo(FileDTO fileDTO);
+
+	@Select("select * from board where bd_idx = #{bdIdx}")
+	Board selectBoardByIdx(String bdIdx);
+
+	@Select("select * from file_info where type_idx = #{bdIdx}")
+	List<FileDTO> selectFilesByIdx(String bdIdx);
 	
 	
 }

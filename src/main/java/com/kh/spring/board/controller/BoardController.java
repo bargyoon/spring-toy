@@ -1,6 +1,9 @@
 package com.kh.spring.board.controller;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +15,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.spring.board.model.dto.Board;
-import com.kh.spring.board.model.service.BoardServiceImpl;
+import com.kh.spring.board.model.service.BoardService;
 import com.kh.spring.member.model.dto.Member;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +27,7 @@ public class BoardController {
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private final BoardServiceImpl boardService;
+	private final BoardService boardService;
 	
 	@GetMapping("board-form")
 	public void boardForm() {}
@@ -39,5 +42,12 @@ public class BoardController {
 		return "redirect:/";
 	}
 	
+	@GetMapping("board-detail")
+	public void boardDetail(String bdIdx
+			,HttpSession session) {
+		
+		Map<String, Object> res = boardService.selectBoardByIdx(bdIdx);
+		session.setAttribute("datas", res);
+	}
 	
 }
