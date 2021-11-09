@@ -13,61 +13,67 @@ import com.kh.spring.common.exception.HandlableException;
 
 public class FileUtil {
 	
-	public FileDTO fileUpload(MultipartFile mf) {
-
-		FileDTO file = createFileDTO(mf);
-	
-		try {
-			mf.transferTo(new File(getSavePath() + file.getRenameFileName()));
-		} catch (IllegalStateException | IOException e) {
-			throw new HandlableException(ErrorCode.FAILED_FILE_UPLOAD_ERROR,e);
-			
-		}
-		return file;
+	public FileDTO fileUpload(MultipartFile file) {
 		
+		FileDTO fileDTO = null;
+		
+		try {
+			String uploadPath = createUploadPath(createSubPath());
+			fileDTO = createFileDTO(file);
+			File dest = new File(uploadPath + fileDTO.getRenameFileName());
+			file.transferTo(dest);
+		} catch (IllegalStateException | IOException e) {
+			throw new HandlableException(ErrorCode.FAILED_FILE_UPLOAD_ERROR	,e);
+		}
+		
+		return fileDTO;
 	}
-
-	private String getSubPath() {
-//		저장경로를 외부경로 + /연/월/일 형태로 작성
-		Calendar today = Calendar.getInstance();
-		int year = today.get(Calendar.YEAR);
-		int month = today.get(Calendar.MONTH) + 1;
-		int date = today.get(Calendar.DATE);
+	
+	private String createSubPath() {
+		//2. 파일 업로드 날짜 기준으로 저장될 파일 경로 생성
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH) + 1;
+		int date = cal.get(Calendar.DAY_OF_MONTH);
+		
 		return year + "/" + month + "/" + date + "/";
 	}
 	
-	private String getSavePath() {
-		// 2. 저장경로를 웹어플리케이션 외부로 지정
-		String subPath = getSubPath();
-		String savePath = Config.UPLOAD_PATH.DESC + subPath;
-
-		File dir = new File(savePath);
-		if (!dir.exists()) {
+	private String createUploadPath(String subPath) {
+		String uploadPath = Config.UPLOAD_PATH.DESC + subPath;
+		
+		File dir = new File(uploadPath);
+		if(!dir.exists()) {
 			dir.mkdirs();
 		}
-		return savePath;
+		return uploadPath;
 	}
 	
-	private FileDTO createFileDTO(MultipartFile mf) {
+	private FileDTO createFileDTO(MultipartFile filePart) {
+		String originFileName = filePart.getOriginalFilename(); //4. File_INFO 테이블에 저장할 FileDTO 생성
+		String renameFileName = UUID.randomUUID().toString(); //1. 서버에 저장될 유니크한 파일이름 생성
+		
+		if(originFileName.contains(".")) {
+			renameFileName = renameFileName + originFileName.substring(originFileName.lastIndexOf("."));
+		}
 
-		// 1. 유니크한 파일명 생성
-		FileDTO fileDTO = new FileDTO();
+		String savePath = createSubPath();
 		
-		String originFileName = mf.getOriginalFilename();
-		String renameFileName = UUID.randomUUID().toString();
-		
-		 if(originFileName.contains(".")) { 
-			 renameFileName = renameFileName += originFileName.substring(originFileName.lastIndexOf(".")); 
-			 }
-		 
-		
-		String savePath = getSubPath();
-
-		// 3. FileDTO 생성
+		FileDTO fileDTO = new FileDTO();			
 		fileDTO.setOriginFileName(originFileName);
 		fileDTO.setRenameFileName(renameFileName);
 		fileDTO.setSavePath(savePath);
-
+		
 		return fileDTO;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 }
