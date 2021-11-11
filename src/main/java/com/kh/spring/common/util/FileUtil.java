@@ -57,6 +57,7 @@ public class FileUtil {
 			renameFileName = renameFileName + originFileName.substring(originFileName.lastIndexOf("."));
 		}
 
+		
 		String savePath = createSubPath();
 		
 		FileDTO fileDTO = new FileDTO();			
