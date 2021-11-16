@@ -50,4 +50,6 @@ public class BoardController {
 		session.setAttribute("datas", res);
 	}
 	
+	
+	
 }
