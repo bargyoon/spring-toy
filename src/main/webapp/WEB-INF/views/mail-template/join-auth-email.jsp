@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" import="com.kh.spring.common.code.Config"%>
 <!DOCTYPE html>
 <html>
 
@@ -147,7 +147,7 @@
                                     <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
                                         <table border="0" cellspacing="0" cellpadding="0">
                                             <tr>
-                                                <td align="center" style="border-radius: 3px;" bgcolor="#FFA73B"><a href="http://localhost:9393/member/join-impl/${param.persistToken}" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">버튼을 클릭 해 회원가입을 완료하세요</a></td>
+                                                <td align="center" style="border-radius: 3px;" bgcolor="#FFA73B"><a href="<%=Config.DOMAIN.DESC %>/member/join-impl/${param.persistToken}" target="_blank" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">버튼을 클릭 해 회원가입을 완료하세요</a></td>
                                             </tr>
                                         </table>
                                     </td>

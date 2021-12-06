@@ -9,8 +9,9 @@
 	
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
 		<property name="username" value="ADMIN"></property>
-		<property name="password" value="Semimm123123"></property>
-		<property name="url" value="jdbc:oracle:thin:@pclassmdb_high?TNS_ADMIN=C:/CODE/Wallet_PCLASSMDB"></property>
+		<property name="password" value="1234"></property>
+		<!--  <property name="url" value="jdbc:oracle:thin:@pclassmdb_high?TNS_ADMIN=C:/CODE/Wallet_PCLASSMDB"></property>-->
+		<property name="url" value="jdbc:oracle:thin:@pclassmdb_high?TNS_ADMIN=/usr/local/tomcat/webapps/ROOT/Wallet_PCLASSMDB"></property>
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
 	</bean>
 	
